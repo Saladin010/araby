@@ -59,5 +59,13 @@ namespace araby.Controllers
             var report = await _reportService.GetPaymentDefaultersAsync();
             return Ok(report);
         }
+        [HttpGet("students/{studentId}")]
+        [Authorize(Roles = "Teacher,Assistant")]
+        public async Task<IActionResult> GetComprehensiveStudentReport(string studentId)
+        {
+            var report = await _reportService.GetStudentComprehensiveReportAsync(studentId);
+            if (report == null) return NotFound("Student not found");
+            return Ok(report);
+        }
     }
 }

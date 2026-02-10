@@ -7,6 +7,7 @@ namespace araby.Models
     {
         public string FullName { get; set; }
         public UserRole Role { get; set; }
+        public int? StudentNumber { get; set; } // Unique number for QR code (students only)
         public string? PhoneNumber { get; set; }
         public string? AcademicLevel { get; set; } // للطلاب فقط
         public DateTime CreatedAt { get; set; }

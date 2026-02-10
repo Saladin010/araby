@@ -136,7 +136,12 @@ export const filterGroups = (groups, filters) => {
         const searchLower = filters.search.toLowerCase()
         filtered = filtered.filter(group =>
             group.groupName?.toLowerCase().includes(searchLower) ||
-            group.description?.toLowerCase().includes(searchLower)
+            group.description?.toLowerCase().includes(searchLower) ||
+            // Search in members
+            (group.members && group.members.some(m =>
+                m.studentName?.toLowerCase().includes(searchLower) ||
+                (m.studentNumber && m.studentNumber.toString().includes(searchLower))
+            ))
         )
     }
 

@@ -135,7 +135,7 @@ const StudentGroups = () => {
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="ابحث عن مجموعة..."
+                                placeholder="ابحث عن مجموعة، طالب، أو رقم..."
                                 className="w-full pr-10 pl-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                             />
                         </div>
@@ -183,8 +183,8 @@ const StudentGroups = () => {
                         <button
                             onClick={() => setView('grid')}
                             className={`p-2 rounded-lg transition-colors ${view === 'grid'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-primary text-white'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             title="عرض شبكي"
                         >
@@ -193,8 +193,8 @@ const StudentGroups = () => {
                         <button
                             onClick={() => setView('list')}
                             className={`p-2 rounded-lg transition-colors ${view === 'list'
-                                    ? 'bg-primary text-white'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-primary text-white'
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 }`}
                             title="عرض قائمة"
                         >

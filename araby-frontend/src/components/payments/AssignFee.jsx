@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DollarSign, Users, Calendar, Clock } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useStudents } from '../../hooks/useStudents'
 import { useFeeTypes } from '../../hooks/useFeeTypes'
-import { useStudentGroups } from '../../hooks/useStudentGroups'
+import { useStudentGroups, useStudentGroup } from '../../hooks/useStudentGroups'
 import { useAssignFee } from '../../hooks/usePayments'
 import toast from 'react-hot-toast'
 
@@ -32,16 +32,31 @@ const AssignFee = () => {
     const feeTypes = feeTypesData || []
     const groups = groupsData || []
 
-    const handleGroupSelect = (groupId) => {
-        setSelectedGroup(groupId)
-        if (groupId) {
-            const group = groups.find(g => g.id === parseInt(groupId))
-            if (group && group.members) {
-                setSelectedStudents(group.members.map(m => m.studentId))
+    // Fetch individual group details when selected (to get members)
+    const { data: groupDetails, isLoading: isLoadingGroup } = useStudentGroup(selectedGroup, {
+        enabled: !!selectedGroup
+    })
+
+    useEffect(() => {
+        if (selectedGroup && groupDetails && groupDetails.members) {
+            const memberIds = groupDetails.members.map(m => m.studentId)
+            setSelectedStudents(memberIds)
+            if (memberIds.length > 0) {
+                toast.success(`تم تحديد ${memberIds.length} طالب من المجموعة`)
+            } else {
+                toast('هذه المجموعة لا تحتوي على طلاب')
             }
-        } else {
+        }
+    }, [groupDetails, selectedGroup])
+
+
+    const handleGroupSelect = (groupId) => {
+        const id = parseInt(groupId) || ''
+        setSelectedGroup(id)
+        if (!id) {
             setSelectedStudents([])
         }
+        // Loading will happen via hook
     }
 
     const handleStudentToggle = (studentId) => {

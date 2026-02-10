@@ -60,6 +60,14 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         ],
         "responses": {
@@ -157,6 +165,18 @@
     },
     "/api/Attendance/statistics/overall": {
       "get": {
+        "tags": [
+          "Attendance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Attendance/mark-absent": {
+      "post": {
         "tags": [
           "Attendance"
         ],
@@ -866,6 +886,59 @@
         }
       }
     },
+    "/api/QRCode/student/{studentId}": {
+      "get": {
+        "tags": [
+          "QRCode"
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/QRCode/scan": {
+      "post": {
+        "tags": [
+          "QRCode"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QRCodeScanDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QRCodeScanDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/QRCodeScanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Reports/financial/monthly": {
       "get": {
         "tags": [
@@ -924,6 +997,28 @@
       "get": {
         "tags": [
           "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Reports/students/{studentId}": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1139,7 +1234,83 @@
         }
       }
     },
+    "/api/Sessions/{id}/groups/{groupId}": {
+      "post": {
+        "tags": [
+          "Sessions"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Sessions/{sessionId}/groups/{groupId}": {
+      "delete": {
+        "tags": [
+          "Sessions"
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "groupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Sessions/upcoming": {
+      "get": {
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Sessions/today": {
       "get": {
         "tags": [
           "Sessions"
@@ -1695,6 +1866,72 @@
           }
         }
       }
+    },
+    "/api/Verification/run-job": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Verification/check-attendance/{sessionId}": {
+      "get": {
+        "tags": [
+          "Verification"
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Verification/simulate-scan": {
+      "post": {
+        "tags": [
+          "Verification"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1825,6 +2062,11 @@
           },
           "studentId": {
             "type": "string",
+            "nullable": true
+          },
+          "sessionDate": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "status": {
@@ -1960,6 +2202,10 @@
             "format": "int32",
             "nullable": true
           },
+          "academicLevel": {
+            "type": "string",
+            "nullable": true
+          },
           "isRecurring": {
             "type": "boolean"
           },
@@ -2042,6 +2288,20 @@
         ],
         "type": "integer",
         "format": "int32"
+      },
+      "QRCodeScanDto": {
+        "type": "object",
+        "properties": {
+          "studentNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scanTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
       },
       "RecordPaymentDto": {
         "type": "object",
@@ -2168,6 +2428,10 @@
           "maxStudents": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "academicLevel": {
+            "type": "string",
             "nullable": true
           },
           "isRecurring": {

@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion'
-import { MoreVertical, Eye, Edit, Key, Calendar, Award, CreditCard, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react'
+import { MoreVertical, Eye, Edit, Key, Calendar, Award, CreditCard, ToggleLeft, ToggleRight, Trash2, QrCode } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { formatDate } from '../../utils/dateUtils'
 
 /**
- * StudentTable Component - Desktop table view
+ * StudentTable Component - Desktop table view with multi-select support
  */
-const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onShowPassword, loading }) => {
+const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onShowPassword, onShowQR, loading, selectedStudents, onSelectStudent, onSelectAll }) => {
     const [openDropdown, setOpenDropdown] = useState(null)
     const dropdownRef = useRef(null)
 
@@ -71,6 +71,19 @@ const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onSh
                                 <Key className="w-4 h-4" />
                                 <span>تغيير كلمة المرور</span>
                             </button>
+
+                            {student.studentNumber && (
+                                <button
+                                    onClick={() => {
+                                        onShowQR(student)
+                                        setOpenDropdown(null)
+                                    }}
+                                    className="w-full px-4 py-2 text-right hover:bg-background transition-colors flex items-center gap-3"
+                                >
+                                    <QrCode className="w-4 h-4" />
+                                    <span>عرض رمز QR</span>
+                                </button>
+                            )}
 
                             <div className="border-t border-border my-2" />
 
@@ -156,8 +169,18 @@ const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onSh
                 <table className="w-full">
                     <thead>
                         <tr className="border-b border-border bg-background/50">
+                            <th className="text-center py-3 px-4 text-sm font-semibold text-text-primary w-12">
+                                <input
+                                    type="checkbox"
+                                    checked={students.length > 0 && selectedStudents.length === students.filter(s => s.studentNumber).length}
+                                    onChange={(e) => onSelectAll(e.target.checked)}
+                                    className="w-4 h-4 text-primary bg-surface border-border rounded focus:ring-primary focus:ring-2"
+                                    title="تحديد الكل"
+                                />
+                            </th>
                             <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">الصورة</th>
                             <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">الاسم الكامل</th>
+                            <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">رقم الطالب</th>
                             <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">اسم المستخدم</th>
                             <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">رقم الهاتف</th>
                             <th className="text-right py-3 px-4 text-sm font-semibold text-text-primary">النوع</th>
@@ -174,14 +197,34 @@ const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onSh
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.2, delay: index * 0.05 }}
-                                className="border-b border-border hover:bg-background/30 transition-colors"
+                                className={`border-b border-border hover:bg-background/30 transition-colors ${selectedStudents.includes(student.id) ? 'bg-primary/5' : ''
+                                    }`}
                             >
+                                <td className="py-3 px-4 text-center">
+                                    {student.studentNumber ? (
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedStudents.includes(student.id)}
+                                            onChange={(e) => onSelectStudent(student.id, e.target.checked)}
+                                            className="w-4 h-4 text-primary bg-surface border-border rounded focus:ring-primary focus:ring-2"
+                                        />
+                                    ) : (
+                                        <span className="text-text-muted text-xs">-</span>
+                                    )}
+                                </td>
                                 <td className="py-3 px-4">
                                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
                                         {getInitials(student.fullName)}
                                     </div>
                                 </td>
                                 <td className="py-3 px-4 font-medium text-text-primary">{student.fullName}</td>
+                                <td className="py-3 px-4">
+                                    {student.studentNumber ? (
+                                        <span className="badge badge-info">{student.studentNumber}</span>
+                                    ) : (
+                                        <span className="text-text-muted">-</span>
+                                    )}
+                                </td>
                                 <td className="py-3 px-4 text-text-muted">{student.userName}</td>
                                 <td className="py-3 px-4 text-text-muted">{student.phoneNumber || '-'}</td>
                                 <td className="py-3 px-4">
@@ -203,7 +246,21 @@ const StudentTable = ({ students, onView, onEdit, onDelete, onToggleStatus, onSh
                                 </td>
                                 <td className="py-3 px-4 text-sm text-text-muted">{formatDate(student.createdAt)}</td>
                                 <td className="py-3 px-4">
-                                    <ActionsDropdown student={student} index={index} />
+                                    <div className="flex items-center gap-2">
+                                        {/* QR Button - Only for students with studentNumber */}
+                                        {student.studentNumber && (
+                                            <button
+                                                onClick={() => onShowQR(student)}
+                                                className="p-2 hover:bg-background rounded-lg transition-colors group relative"
+                                                title="عرض رمز QR"
+                                            >
+                                                <QrCode className="w-5 h-5 text-primary" />
+                                            </button>
+                                        )}
+
+                                        {/* Actions Dropdown */}
+                                        <ActionsDropdown student={student} index={index} />
+                                    </div>
                                 </td>
                             </motion.tr>
                         ))}

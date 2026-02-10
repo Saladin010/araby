@@ -13,6 +13,7 @@ namespace araby.Data
 
         public DbSet<Session> Sessions { get; set; }
         public DbSet<SessionStudent> SessionStudents { get; set; }
+        public DbSet<SessionGroup> SessionGroups { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<FeeType> FeeTypes { get; set; }
         public DbSet<StudentGroup> StudentGroups { get; set; }
@@ -32,6 +33,14 @@ namespace araby.Data
                 entity.Property(e => e.Role).IsRequired();
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+                
+                // StudentNumber configuration for QR code system
+                entity.Property(e => e.StudentNumber)
+                    .ValueGeneratedNever(); // Manually assigned, not auto-increment
+                
+                entity.HasIndex(e => e.StudentNumber)
+                    .IsUnique()
+                    .HasFilter("[StudentNumber] IS NOT NULL"); // Unique only for non-null values
             });
 
             // Session Configurations
@@ -39,7 +48,8 @@ namespace araby.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-                entity.Property(e => e.Location).IsRequired().HasMaxLength(300);
+                entity.Property(e => e.Location).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.AcademicLevel).HasMaxLength(50);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
             });
 
@@ -57,6 +67,24 @@ namespace araby.Data
                     .WithMany()
                     .HasForeignKey(e => e.StudentId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.EnrolledAt).HasDefaultValueSql("GETDATE()");
+            });
+
+            // SessionGroup (Many-to-Many)
+            builder.Entity<SessionGroup>(entity =>
+            {
+                entity.HasKey(e => new { e.SessionId, e.StudentGroupId });
+
+                entity.HasOne(e => e.Session)
+                    .WithMany(s => s.SessionGroups)
+                    .HasForeignKey(e => e.SessionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.StudentGroup)
+                    .WithMany(g => g.AssignedSessions)
+                    .HasForeignKey(e => e.StudentGroupId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(e => e.EnrolledAt).HasDefaultValueSql("GETDATE()");
             });
@@ -80,6 +108,17 @@ namespace araby.Data
                     .WithMany()
                     .HasForeignKey(e => e.RecordedBy)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                // SessionDate: Date only (no time component)
+                entity.Property(e => e.SessionDate)
+                    .HasColumnType("date")
+                    .IsRequired();
+
+                // Unique constraint: One attendance record per (Session, Student, Date)
+                // This prevents duplicate attendance for the same session occurrence
+                entity.HasIndex(e => new { e.SessionId, e.StudentId, e.SessionDate })
+                    .IsUnique()
+                    .HasDatabaseName("IX_Attendance_SessionStudent_Date");
 
                 entity.Property(e => e.RecordedAt).HasDefaultValueSql("GETDATE()");
                 entity.Property(e => e.Notes).HasMaxLength(500);

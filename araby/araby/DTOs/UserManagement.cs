@@ -21,10 +21,10 @@ namespace araby.DTOs
         public string PhoneNumber { get; set; }
     }
 
-    // DTOs/User/UserDto.cs
     public class UserDto
     {
         public string Id { get; set; }
+        public int? StudentNumber { get; set; }
         public string UserName { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }

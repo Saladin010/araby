@@ -7,6 +7,7 @@ namespace araby.DTOs
     {
         public int SessionId { get; set; }
         public string StudentId { get; set; }
+        public DateTime? SessionDate { get; set; } // Optional, defaults to Today if null
         public AttendanceStatus Status { get; set; }
         public string Notes { get; set; }
     }
@@ -18,7 +19,9 @@ namespace araby.DTOs
         public int SessionId { get; set; }
         public string SessionTitle { get; set; }
         public string StudentId { get; set; }
+        public string StudentNumber { get; set; }
         public string StudentName { get; set; }
+        public DateTime SessionDate { get; set; } // The date of the session occurrence
         public AttendanceStatus Status { get; set; }
         public DateTime RecordedAt { get; set; }
         public string RecordedBy { get; set; }

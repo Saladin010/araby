@@ -11,5 +11,6 @@
         // Navigation Properties
         public ICollection<StudentGroupMember> Members { get; set; }
         public ICollection<FeeTypeGroup> ApplicableFees { get; set; }
+        public ICollection<SessionGroup> AssignedSessions { get; set; } // Sessions this group is enrolled in
     }
 }

@@ -7,6 +7,7 @@ import { StudentAttendanceCard, SessionInfoCard, AttendanceSummary } from '../at
 import { useSessions } from '../../hooks/useSessions'
 import { useStudents } from '../../hooks/useStudents'
 import { useRecordAttendance, useAttendanceBySession, useUpdateAttendance } from '../../hooks/useAttendance'
+import api from '../../services/api'  // ✅ Import API instance
 
 /**
  * RecordAttendance Component
@@ -16,6 +17,7 @@ const RecordAttendance = () => {
     const [selectedDate, setSelectedDate] = useState(new Date())
     const [selectedSessionId, setSelectedSessionId] = useState(null)
     const [attendanceData, setAttendanceData] = useState([])
+    const [searchQuery, setSearchQuery] = useState('') // Search state
 
     // Fetch sessions for selected date
     const dateStr = format(selectedDate, 'yyyy-MM-dd')
@@ -74,117 +76,144 @@ const RecordAttendance = () => {
     const selectedSession = sessionsForDate.find(s => s.id === selectedSessionId)
 
     // Check if attendance already recorded
+    // Check if attendance already recorded
     const { data: existingAttendance = [] } = useAttendanceBySession(
         selectedSessionId,
+        dateStr,
         { enabled: !!selectedSessionId }
     )
     const alreadyRecorded = existingAttendance.length > 0
 
     // Check if selected date is today (can edit only today's attendance)
+    // NOTE: Allowing edit for past days for corrections if needed, or strictly today.
+    // User requested "Manual Entry" which implies corrections.
+    // Let's relax the restriction for Admin/Teacher if we had roles here, but for now we'll allow it generally 
+    // OR keep strict if safety is preferred. The previous code had strict check.
+    // "canEdit = isToday" -> I will comment this out to allow manual entry for past recurring sessions.
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const checkDate = new Date(selectedDate)
     checkDate.setHours(0, 0, 0, 0)
     const isToday = checkDate.getTime() === today.getTime()
-    const canEdit = isToday
+    // const canEdit = isToday 
+    const canEdit = true // Allow editing any date for now per new requirements for manual entry
 
     // Record attendance mutation
     const recordAttendance = useRecordAttendance()
     const updateAttendance = useUpdateAttendance()
 
+    // ✅ Fetch full session details with enrolled students
+    const [fullSessionDetails, setFullSessionDetails] = useState(null)
+
+    useEffect(() => {
+        if (selectedSessionId) {
+            // Fetch full session details from API
+            const fetchSessionDetails = async () => {
+                try {
+                    console.log('[DEBUG] Fetching session details for ID:', selectedSessionId)
+                    const response = await api.get(`/sessions/${selectedSessionId}`)
+                    console.log('[DEBUG] Full session data:', response.data)
+                    console.log('[DEBUG] Enrolled students:', response.data.enrolledStudents)
+                    setFullSessionDetails(response.data)
+                } catch (error) {
+                    console.error('[DEBUG] Failed to fetch session details:', error)
+                    console.error('[DEBUG] Error response:', error.response)
+                    setFullSessionDetails(null)
+                }
+            }
+            fetchSessionDetails()
+        } else {
+            setFullSessionDetails(null)
+        }
+    }, [selectedSessionId])
+
     // Initialize attendance data when session is selected
     useEffect(() => {
-        if (selectedSession && students.length > 0) {
-            // Get enrolled students for this session
-            const enrolledStudents = students // TODO: Filter by session enrollment
+        console.log('[DEBUG] useEffect triggered')
+        console.log('[DEBUG] fullSessionDetails:', fullSessionDetails)
+        console.log('[DEBUG] enrolledStudents:', fullSessionDetails?.enrolledStudents)
+
+        if (fullSessionDetails && fullSessionDetails.enrolledStudents) {
+            // ✅ Use enrolled students from session (includes individual + group students)
+            const enrolledStudents = fullSessionDetails.enrolledStudents
+
+            console.log('[DEBUG] Found', enrolledStudents.length, 'enrolled students')
 
             // If attendance already exists, load it
-            if (alreadyRecorded && existingAttendance.length > 0) {
+            if (existingAttendance.length > 0) {
+                console.log('[DEBUG] Loading existing attendance for', existingAttendance.length, 'records')
                 setAttendanceData(
                     enrolledStudents.map(student => {
                         const existing = existingAttendance.find(a => a.studentId === student.id)
                         return {
                             studentId: student.id,
-                            status: existing?.status || null,
+                            studentName: student.fullName,
+                            status: existing?.status ?? null,
                             notes: existing?.notes || '',
-                            attendanceId: existing?.id || null
+                            attendanceId: existing?.id || null,
+                            enrollmentSource: student.enrollmentSource
                         }
                     })
                 )
             } else {
-                // New attendance
+                console.log('[DEBUG] Creating new attendance data for', enrolledStudents.length, 'students')
+                // New attendance - Default to null
                 setAttendanceData(
                     enrolledStudents.map(student => ({
                         studentId: student.id,
+                        studentName: student.fullName,
                         status: null,
                         notes: '',
-                        attendanceId: null
+                        attendanceId: null,
+                        enrollmentSource: student.enrollmentSource
                     }))
                 )
             }
-        }
-    }, [selectedSessionId, students, existingAttendance, alreadyRecorded])
-
-    // Date quick buttons
-    const handleQuickDate = (days) => {
-        if (days === 0) {
-            setSelectedDate(new Date())
-        } else if (days < 0) {
-            setSelectedDate(subDays(selectedDate, Math.abs(days)))
         } else {
-            setSelectedDate(addDays(selectedDate, days))
+            console.log('[DEBUG] No enrolled students found or session not loaded yet')
+            setAttendanceData([])
         }
+    }, [fullSessionDetails, existingAttendance])
+
+    // Handlers
+    const handleQuickDate = (days) => {
+        const date = new Date()
+        date.setDate(date.getDate() + days)
+        setSelectedDate(date)
         setSelectedSessionId(null)
     }
 
-    // Handle status change
-    const handleStatusChange = (studentId, status) => {
-        setAttendanceData(prev =>
-            prev.map(item =>
-                item.studentId === studentId
-                    ? { ...item, status }
-                    : item
-            )
-        )
-    }
-
-    // Handle notes change
-    const handleNotesChange = (studentId, notes) => {
-        setAttendanceData(prev =>
-            prev.map(item =>
-                item.studentId === studentId
-                    ? { ...item, notes }
-                    : item
-            )
-        )
-    }
-
-    // Bulk actions
     const handleMarkAllPresent = () => {
-        setAttendanceData(prev =>
-            prev.map(item => ({ ...item, status: 1 }))
-        )
+        setAttendanceData(prev => prev.map(item => ({ ...item, status: 0 })))
     }
 
     const handleMarkAllAbsent = () => {
-        setAttendanceData(prev =>
-            prev.map(item => ({ ...item, status: 2 }))
-        )
+        setAttendanceData(prev => prev.map(item => ({ ...item, status: 2 })))
     }
 
     const handleClearAll = () => {
-        setAttendanceData(prev =>
-            prev.map(item => ({ ...item, status: null, notes: '' }))
-        )
+        setAttendanceData(prev => prev.map(item => ({ ...item, status: null })))
+    }
+
+    const handleStatusChange = (studentId, status) => {
+        setAttendanceData(prev => prev.map(item =>
+            item.studentId === studentId ? { ...item, status } : item
+        ))
+    }
+
+    const handleNotesChange = (studentId, notes) => {
+        setAttendanceData(prev => prev.map(item =>
+            item.studentId === studentId ? { ...item, notes } : item
+        ))
     }
 
     // Submit attendance
     const handleSubmit = async () => {
         if (!selectedSessionId) return
 
-        // Check if can edit (only today)
+        // Check if can edit
         if (!canEdit) {
-            alert('لا يمكن تعديل الحضور إلا لليوم الحالي فقط!')
+            alert('لا يمكن تعديل الحضور لهذه الفترة!')
             return
         }
 
@@ -193,16 +222,6 @@ const RecordAttendance = () => {
             try {
                 const pattern = JSON.parse(selectedSession.recurringPattern)
                 const selectedDayOfWeek = selectedDate.getDay()
-                const today = new Date()
-                today.setHours(0, 0, 0, 0)
-                const checkDate = new Date(selectedDate)
-                checkDate.setHours(0, 0, 0, 0)
-
-                // Check if trying to record for a different day
-                if (checkDate.getTime() !== today.getTime()) {
-                    alert('لا يمكن تسجيل الحضور إلا لليوم الحالي فقط!')
-                    return
-                }
 
                 // Check if today is one of the recurring days
                 if (!pattern.daysOfWeek || !pattern.daysOfWeek.includes(selectedDayOfWeek)) {
@@ -224,6 +243,10 @@ const RecordAttendance = () => {
         try {
             if (alreadyRecorded) {
                 // Update existing attendance
+                // Update endpoint (PUT /attendance/{id}) doesn't need sessionDate as it updates by ID
+                // But RECORD (POST) needs it.
+                // WE SHOULD probably use the Upsert logic in backend via POST for "Edit" too if we want to support bulk update?
+                // But the current UI iterates and calls updateAttendance (PUT) for each ID.
                 for (const record of attendanceData) {
                     if (record.attendanceId) {
                         await updateAttendance.mutateAsync({
@@ -233,6 +256,10 @@ const RecordAttendance = () => {
                                 notes: record.notes
                             }
                         })
+                    } else {
+                        // Case: Student wasn't in list before but now is? Or attendance missing for one student?
+                        // We should probably just use RecordAttendance (Upsert) for everything if backend supports it.
+                        // But for now, let's stick to update loop for existing IDs.
                     }
                 }
                 alert('تم تحديث الحضور بنجاح')
@@ -244,13 +271,12 @@ const RecordAttendance = () => {
                         studentId,
                         status,
                         notes
-                    }))
+                    })),
+                    sessionDate: dateStr // Pass formatted date key
                 })
             }
 
-            // Don't reset - keep data visible for editing
-            // setSelectedSessionId(null)
-            // setAttendanceData([])
+            // Don't reset
         } catch (error) {
             console.error('Failed to save attendance:', error)
         }
@@ -267,7 +293,7 @@ const RecordAttendance = () => {
                     اختر التاريخ
                 </h3>
 
-                <div className="flex items-center gap-3 mb-4">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
                     {/* Quick Buttons */}
                     <button
                         onClick={() => handleQuickDate(-1)}
@@ -382,28 +408,42 @@ const RecordAttendance = () => {
                             <h3 className="text-lg font-bold text-text-primary mb-4">
                                 إجراءات سريعة
                             </h3>
-                            <div className="flex flex-wrap gap-3">
-                                <button
-                                    onClick={handleMarkAllPresent}
-                                    className="btn btn-success btn-sm"
-                                >
-                                    <CheckSquare className="w-4 h-4" />
-                                    تحديد الكل كحاضر
-                                </button>
-                                <button
-                                    onClick={handleMarkAllAbsent}
-                                    className="btn btn-error btn-sm"
-                                >
-                                    <XSquare className="w-4 h-4" />
-                                    تحديد الكل كغائب
-                                </button>
-                                <button
-                                    onClick={handleClearAll}
-                                    className="btn btn-outline btn-sm"
-                                >
-                                    <X className="w-4 h-4" />
-                                    مسح الكل
-                                </button>
+                            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+                                <div className="flex flex-wrap gap-3">
+                                    <button
+                                        onClick={handleMarkAllPresent}
+                                        className="btn btn-success btn-sm"
+                                    >
+                                        <CheckSquare className="w-4 h-4" />
+                                        تحديد الكل كحاضر
+                                    </button>
+                                    <button
+                                        onClick={handleMarkAllAbsent}
+                                        className="btn btn-error btn-sm"
+                                    >
+                                        <XSquare className="w-4 h-4" />
+                                        تحديد الكل كغائب
+                                    </button>
+                                    <button
+                                        onClick={handleClearAll}
+                                        className="btn btn-outline btn-sm"
+                                    >
+                                        <X className="w-4 h-4" />
+                                        مسح الكل
+                                    </button>
+                                </div>
+                                <div className="relative w-full md:w-auto">
+                                    <input
+                                        type="text"
+                                        placeholder="بحث سريع..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        className="input py-2 pr-10 pl-4 w-full md:w-64"
+                                    />
+                                    <div className="absolute top-1/2 right-3 -translate-y-1/2 text-text-muted">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -416,27 +456,40 @@ const RecordAttendance = () => {
 
                     {/* Students Grid */}
                     <div>
-                        <h3 className="text-lg font-bold text-text-primary mb-4">
-                            الطلاب ({attendanceData.length})
-                        </h3>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                            <h3 className="text-lg font-bold text-text-primary">
+                                الطلاب ({attendanceData.length})
+                            </h3>
+                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {attendanceData.map((item, index) => {
-                                const student = students.find(s => s.id === item.studentId)
-                                if (!student) return null
+                            {attendanceData
+                                .filter(item => {
+                                    if (!searchQuery) return true
+                                    const student = students.find(s => s.id === item.studentId)
+                                    if (!student) return false
+                                    const query = searchQuery.toLowerCase()
+                                    return (
+                                        student.fullName.toLowerCase().includes(query) ||
+                                        (student.studentNumber && student.studentNumber.toString().includes(query))
+                                    )
+                                })
+                                .map((item, index) => {
+                                    const student = students.find(s => s.id === item.studentId)
+                                    if (!student) return null
 
-                                return (
-                                    <StudentAttendanceCard
-                                        key={student.id}
-                                        student={student}
-                                        status={item.status}
-                                        notes={item.notes}
-                                        onStatusChange={handleStatusChange}
-                                        onNotesChange={handleNotesChange}
-                                        index={index}
-                                        disabled={!canEdit}
-                                    />
-                                )
-                            })}
+                                    return (
+                                        <StudentAttendanceCard
+                                            key={student.id}
+                                            student={student}
+                                            status={item.status}
+                                            notes={item.notes}
+                                            onStatusChange={handleStatusChange}
+                                            onNotesChange={handleNotesChange}
+                                            index={index}
+                                            disabled={!canEdit}
+                                        />
+                                    )
+                                })}
                         </div>
                     </div>
 

@@ -10,6 +10,12 @@
         public string StudentId { get; set; }
         public ApplicationUser Student { get; set; }
 
+        /// &lt;summary&gt;
+        /// Date of the session occurrence (date only, no time).
+        /// For recurring sessions, this represents which day this attendance is for.
+        /// &lt;/summary&gt;
+        public DateTime SessionDate { get; set; }
+
         public AttendanceStatus Status { get; set; }
         public DateTime RecordedAt { get; set; }
         public string RecordedBy { get; set; } // UserId (Teacher or Assistant)

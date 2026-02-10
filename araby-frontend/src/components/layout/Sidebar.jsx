@@ -14,6 +14,7 @@ import {
     LogOut,
     User,
     X,
+    QrCode,
 } from 'lucide-react'
 import { Avatar } from '../common'
 import LanguageToggle from '../common/LanguageToggle'
@@ -39,6 +40,7 @@ const Sidebar = ({ role, activeRoute, onNavigate, collapsed, onToggle, user, onL
             { label: 'الطلاب', path: '/students', icon: <Users size={20} /> },
             { label: 'الحصص', path: '/sessions', icon: <Calendar size={20} /> },
             { label: 'الحضور', path: '/attendance', icon: <ClipboardCheck size={20} /> },
+            { label: 'مسح الحضور', path: '/qr-scanner', icon: <QrCode size={20} /> },
             { label: 'المدفوعات', path: '/payments', icon: <DollarSign size={20} /> },
             { label: 'أنواع المصروفات', path: '/fee-types', icon: <DollarSign size={20} /> },
             { label: 'الدرجات', path: '/grades', icon: <GraduationCap size={20} /> },
@@ -52,6 +54,7 @@ const Sidebar = ({ role, activeRoute, onNavigate, collapsed, onToggle, user, onL
             { label: 'الطلاب', path: '/students', icon: <Users size={20} /> },
             { label: 'الحصص', path: '/sessions', icon: <Calendar size={20} /> },
             { label: 'الحضور', path: '/attendance', icon: <ClipboardCheck size={20} /> },
+            { label: 'مسح الحضور', path: '/qr-scanner', icon: <QrCode size={20} /> },
             { label: 'المدفوعات', path: '/payments', icon: <DollarSign size={20} /> },
             { label: 'الدرجات', path: '/grades', icon: <GraduationCap size={20} /> },
             { label: 'المجموعات', path: '/groups', icon: <UsersRound size={20} /> },
@@ -60,6 +63,7 @@ const Sidebar = ({ role, activeRoute, onNavigate, collapsed, onToggle, user, onL
 
         const studentMenu = [
             { label: 'لوحة التحكم', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+            { label: 'رمز الحضور', path: '/my-qr-code', icon: <QrCode size={20} /> },
             { label: 'حصصي', path: '/student/sessions', icon: <Calendar size={20} /> },
             { label: 'درجاتي', path: '/student/grades', icon: <GraduationCap size={20} /> },
             { label: 'مدفوعاتي', path: '/student/payments', icon: <DollarSign size={20} /> },
@@ -129,7 +133,7 @@ const Sidebar = ({ role, activeRoute, onNavigate, collapsed, onToggle, user, onL
                     {/* Show title if not collapsed OR if on mobile */}
                     {(!collapsed || typeof window !== 'undefined' && window.innerWidth < 768) && (
                         <h2 className="text-lg font-heading font-bold gradient-text">
-                            منصة الأستاذ
+                            Mr. Ahmed Amr
                         </h2>
                     )}
 

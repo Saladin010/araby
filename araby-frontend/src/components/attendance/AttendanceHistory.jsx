@@ -17,7 +17,10 @@ const AttendanceHistory = () => {
         studentId: null,
         status: null,
         startDate: null,
+        status: null,
+        startDate: null,
         endDate: null,
+        searchQuery: '', // New search state
     })
 
     // Fetch all data
@@ -38,11 +41,20 @@ const AttendanceHistory = () => {
     if (filters.status) {
         attendanceRecords = attendanceRecords.filter(r => r.status === filters.status)
     }
+
+    // Text Search Filter
+    if (filters.searchQuery) {
+        const query = filters.searchQuery.toLowerCase()
+        attendanceRecords = attendanceRecords.filter(r =>
+            (r.studentName && r.studentName.toLowerCase().includes(query)) ||
+            (r.studentNumber && r.studentNumber.toLowerCase().includes(query))
+        )
+    }
     if (filters.startDate) {
         const startDate = new Date(filters.startDate)
         startDate.setHours(0, 0, 0, 0)
         attendanceRecords = attendanceRecords.filter(r => {
-            const recordDate = new Date(r.recordedAt)
+            const recordDate = new Date(r.sessionDate || r.recordedAt) // Fallback to recordedAt if sessionDate missing
             recordDate.setHours(0, 0, 0, 0)
             return recordDate >= startDate
         })
@@ -51,7 +63,7 @@ const AttendanceHistory = () => {
         const endDate = new Date(filters.endDate)
         endDate.setHours(23, 59, 59, 999)
         attendanceRecords = attendanceRecords.filter(r => {
-            const recordDate = new Date(r.recordedAt)
+            const recordDate = new Date(r.sessionDate || r.recordedAt)
             return recordDate <= endDate
         })
     }
@@ -80,7 +92,10 @@ const AttendanceHistory = () => {
             studentId: null,
             status: null,
             startDate: null,
+            status: null,
+            startDate: null,
             endDate: null,
+            searchQuery: '',
         })
     }
 
@@ -94,6 +109,20 @@ const AttendanceHistory = () => {
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {/* Search Input */}
+                    <div className="md:col-span-3">
+                        <label className="label">
+                            <Search className="w-4 h-4" />
+                            <span className="mr-2">بحث (اسم الطالب أو رقمه)</span>
+                        </label>
+                        <input
+                            type="text"
+                            value={filters.searchQuery}
+                            onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
+                            className="input w-full"
+                            placeholder="ابحث عن اسم الطالب أو رقمه التعريفي..."
+                        />
+                    </div>
                     {/* Session Filter */}
                     <div>
                         <label className="label">
@@ -111,7 +140,7 @@ const AttendanceHistory = () => {
                             <option value="">جميع الحصص</option>
                             {sessions.map(session => (
                                 <option key={session.id} value={session.id}>
-                                    {session.title} - {format(new Date(session.startTime), 'd MMM', { locale: ar })}
+                                    {session.title}
                                 </option>
                             ))}
                         </select>
@@ -161,7 +190,7 @@ const AttendanceHistory = () => {
 
                     {/* Date Range */}
                     <div>
-                        <label className="label">من تاريخ</label>
+                        <label className="label">من تاريخ (تاريخ الحصة)</label>
                         <input
                             type="date"
                             value={filters.startDate || ''}
@@ -220,12 +249,12 @@ const AttendanceHistory = () => {
                         <table className="w-full">
                             <thead>
                                 <tr className="border-b border-border">
-                                    <th className="text-right p-3 font-semibold text-text-primary">التاريخ</th>
+                                    <th className="text-right p-3 font-semibold text-text-primary">تاريخ الحصة</th>
                                     <th className="text-right p-3 font-semibold text-text-primary">الحصة</th>
                                     <th className="text-right p-3 font-semibold text-text-primary">الطالب</th>
                                     <th className="text-right p-3 font-semibold text-text-primary">الحالة</th>
                                     <th className="text-right p-3 font-semibold text-text-primary">الملاحظات</th>
-                                    <th className="text-right p-3 font-semibold text-text-primary">تم التسجيل بواسطة</th>
+                                    <th className="text-right p-3 font-semibold text-text-primary">توقيت التسجيل</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -238,7 +267,7 @@ const AttendanceHistory = () => {
                                         className="border-b border-border hover:bg-background transition-colors"
                                     >
                                         <td className="p-3 text-text-muted">
-                                            {format(new Date(record.recordedAt), 'd MMM yyyy', { locale: ar })}
+                                            {format(new Date(record.sessionDate || record.recordedAt), 'd MMM yyyy', { locale: ar })}
                                         </td>
                                         <td className="p-3 text-text-primary font-medium">
                                             {record.sessionTitle}

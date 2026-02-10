@@ -141,6 +141,118 @@ namespace araby.Services
             return performanceReports.OrderBy(p => p.StudentName);
         }
 
+        public async Task<StudentComprehensiveReportDto> GetStudentComprehensiveReportAsync(string studentId)
+        {
+            var student = await _userManager.FindByIdAsync(studentId);
+            if (student == null) return null;
+
+            // 1. Attendance Stats
+            var attendances = await _attendanceRepository.GetByStudentIdAsync(studentId);
+            var attList = attendances.ToList();
+            var totalSessions = attList.Count;
+            var presentCount = attList.Count(a => a.Status == AttendanceStatus.Present);
+            var absentCount = attList.Count(a => a.Status == AttendanceStatus.Absent);
+            var lateCount = attList.Count(a => a.Status == AttendanceStatus.Late);
+            var excusedCount = attList.Count(a => a.Status == AttendanceStatus.Excused);
+            var attPercentage = totalSessions > 0 ? (decimal)presentCount / totalSessions * 100 : 0;
+
+            var recentAttendance = attList
+                .OrderByDescending(a => a.SessionDate)
+                .Take(5)
+                .Select(a => new AttendanceRecordDto
+                {
+                    SessionTitle = a.Session?.Title ?? "Unknown Session",
+                    Date = a.SessionDate,
+                    Status = a.Status
+                })
+                .ToList();
+
+            // Calculate Status Score
+            // Default: 100
+            // Late: -5
+            // Absent: -10
+            // Excused: -0
+            // 2. Grade Stats
+            var grades = await _gradeRepository.GetByStudentIdAsync(studentId);
+            var gradeList = grades.ToList();
+            var totalExams = gradeList.Count;
+            var avgScore = totalExams > 0 ? (decimal)gradeList.Average(g => g.Score) : 0;
+            var highestScore = totalExams > 0 ? (decimal)gradeList.Max(g => g.Score) : 0;
+            var lowestScore = totalExams > 0 ? (decimal)gradeList.Min(g => g.Score) : 0;
+            var avgPercentage = totalExams > 0 ? (decimal)gradeList.Average(g => (g.Score / g.MaxScore) * 100) : 0;
+
+            var recentGrades = gradeList
+                .OrderByDescending(g => g.ExamDate)
+                .Take(5)
+                .Select(g => new GradeRecordDto
+                {
+                    ExamName = g.ExamName,
+                    Date = g.ExamDate,
+                    Score = (double)g.Score,
+                    MaxScore = (double)g.MaxScore
+                })
+                .ToList();
+
+            // Calculate Status Score (Attendance + Grades)
+            var absenceScore = 100 - (absentCount * 10) - (lateCount * 5);
+            var statusDescription = "ممتاز";
+
+            if (absenceScore < 50 || avgPercentage < 50)
+                statusDescription = "خطر";
+            else if (absenceScore < 70 || avgPercentage < 65)
+                statusDescription = "تحتاج متابعة";
+            else if (absenceScore < 90 || avgPercentage < 85)
+                statusDescription = "جيد جداً";
+
+            // 3. Payment Stats
+            var payments = await _paymentRepository.GetByStudentIdAsync(studentId);
+            var paymentList = payments.ToList();
+            var totalPaid = paymentList.Where(p => p.Status == PaymentStatus.Paid).Sum(p => p.AmountPaid);
+            var pendingCount = paymentList.Count(p => p.Status == PaymentStatus.Pending);
+            
+            var recentPayments = paymentList
+                .OrderByDescending(p => p.PaymentDate)
+                .Take(5)
+                .Select(p => new PaymentRecordDto
+                {
+                    FeeType = p.FeeType?.Name ?? "General",
+                    Amount = p.AmountPaid > 0 ? p.AmountPaid : p.ExpectedAmount,
+                    Date = p.PaymentDate,
+                    Status = p.Status
+                })
+                .ToList();
+
+            return new StudentComprehensiveReportDto
+            {
+                StudentId = student.Id,
+                FullName = student.FullName,
+                StudentNumber = student.StudentNumber?.ToString(),
+                AcademicLevel = student.AcademicLevel,
+                PhoneNumber = student.PhoneNumber,
+                UnlockedAt = student.CreatedAt,
+                
+                TotalSessions = totalSessions,
+                PresentCount = presentCount,
+                AbsentCount = absentCount,
+                LateCount = lateCount,
+                ExcusedCount = excusedCount,
+                AttendancePercentage = Math.Round(attPercentage, 1),
+                RecentAttendance = recentAttendance,
+                StudentStatus = statusDescription, // New Field need to add to DTO
+
+                TotalExams = totalExams,
+                AverageScore = Math.Round(avgScore, 1),
+                AveragePercentage = Math.Round(avgPercentage, 1),
+                HighestScore = highestScore,
+                LowestScore = lowestScore,
+                RecentGrades = recentGrades,
+
+                TotalPaid = totalPaid,
+                PendingPaymentsCount = pendingCount,
+                PaymentHistory = recentPayments
+            };
+        }
+
         public async Task<IEnumerable<PaymentDefaulterDto>> GetPaymentDefaultersAsync()
         {
             // Get all payments

@@ -9,8 +9,8 @@ export const useRecordAttendance = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: ({ sessionId, records }) =>
-            attendanceService.recordAttendance(sessionId, records),
+        mutationFn: ({ sessionId, records, sessionDate }) =>
+            attendanceService.recordAttendance(sessionId, records, sessionDate),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: ['attendance'] })
             queryClient.invalidateQueries({ queryKey: ['attendance', 'session', variables.sessionId] })
@@ -26,10 +26,10 @@ export const useRecordAttendance = () => {
 /**
  * Hook to fetch attendance records for a session
  */
-export const useAttendanceBySession = (sessionId, options = {}) => {
+export const useAttendanceBySession = (sessionId, date = null, options = {}) => {
     return useQuery({
-        queryKey: ['attendance', 'session', sessionId],
-        queryFn: () => attendanceService.getAttendanceBySession(sessionId),
+        queryKey: ['attendance', 'session', sessionId, date], // Add date to queryKey
+        queryFn: () => attendanceService.getAttendanceBySession(sessionId, date),
         enabled: !!sessionId,
         staleTime: 1000 * 60 * 5, // 5 minutes
         ...options,

@@ -8,5 +8,6 @@ namespace araby.Services.Interfaces
         Task<AttendanceSummaryReportDto> GetAttendanceSummaryReportAsync();
         Task<IEnumerable<StudentPerformanceReportDto>> GetStudentsPerformanceReportAsync();
         Task<IEnumerable<PaymentDefaulterDto>> GetPaymentDefaultersAsync();
+        Task<StudentComprehensiveReportDto> GetStudentComprehensiveReportAsync(string studentId);
     }
 }

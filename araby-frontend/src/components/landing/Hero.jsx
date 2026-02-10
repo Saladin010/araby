@@ -57,7 +57,7 @@ const Hero = () => {
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6"
                         >
                             <Sparkles size={16} />
-                            <span className="text-sm font-medium">منصة تعليمية متكاملة</span>
+                            <span className="text-sm font-medium">تعليم اللغة الإنجليزية باحترافية</span>
                         </motion.div>
 
                         {/* Main Headline */}
@@ -67,7 +67,7 @@ const Hero = () => {
                             transition={{ delay: 0.3 }}
                             className="text-5xl lg:text-7xl font-heading font-bold mb-4 bg-gradient-to-l from-primary to-primary-dark bg-clip-text text-transparent"
                         >
-                            الأستاذ
+                            Mr. Ahmed Amr
                         </motion.h1>
 
                         {/* Subheadline */}
@@ -77,7 +77,7 @@ const Hero = () => {
                             transition={{ delay: 0.4 }}
                             className="text-xl lg:text-2xl text-text-secondary mb-6 font-medium"
                         >
-                            رحلتك نحو الإتقان  تبدأ هنا
+                            رحلتك لإتقان اللغة الإنجليزية تبدأ هنا
                         </motion.h2>
 
                         {/* Description */}
@@ -87,9 +87,9 @@ const Hero = () => {
                             transition={{ delay: 0.5 }}
                             className="text-lg text-text-secondary mb-8 leading-relaxed"
                         >
-                            نظام متكامل لإدارة الدروس الخصوصية يجمع بين الخبرة التعليمية الطويلة
-                            والتكنولوجيا الحديثة لضمان أفضل النتائج. انضم إلى مئات الطلاب الذين
-                            حققوا التميز.
+                            مدرس لغة إنجليزية محترف بخبرة تعليمية طويلة. نقدم منهجاً شاملاً يجمع بين
+                            القواعد والمحادثة والكتابة لضمان إتقان اللغة بشكل متكامل. انضم إلى مئات الطلاب
+                            الذين حققوا التميز في اللغة الإنجليزية.
                         </motion.p>
 
                         {/* CTA Buttons */}
@@ -136,25 +136,15 @@ const Hero = () => {
 
                             {/* Image Container */}
                             <div className="relative w-64 h-64 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-surface shadow-2xl">
-                                {/* Placeholder Gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center">
-                                    <div className="text-center">
-                                        <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center">
-                                            <span className="text-6xl text-white font-heading">غ</span>
-                                        </div>
-                                        <p className="text-text-primary font-heading text-xl">
-                                            الأستاذ
-                                        </p>
-                                    </div>
-                                </div>
-
-                                {/* Geometric Pattern Overlay */}
-                                <div
-                                    className="absolute inset-0 opacity-10"
-                                    style={{
-                                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
-                                    }}
+                                {/* Teacher Image */}
+                                <img
+                                    src="/assets/480521392_122207168180215091_998268467823375454_n.jpg"
+                                    alt="Mr. Ahmed Amr - English Teacher"
+                                    className="absolute inset-0 w-full h-full object-cover"
                                 />
+
+                                {/* Subtle Overlay for better contrast */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent" />
                             </div>
                         </motion.div>
                     </motion.div>

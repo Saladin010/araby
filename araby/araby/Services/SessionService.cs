@@ -22,18 +22,23 @@ namespace araby.Services
         public async Task<SessionDto> CreateSessionAsync(CreateSessionDto dto)
         {
             var egyptNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, EgyptTimeZone);
-            var duration = dto.EndTime - dto.StartTime;
+
+            // Convert incoming UTC times to Egypt timezone
+            var startTimeEgypt = TimeZoneInfo.ConvertTimeFromUtc(dto.StartTime.ToUniversalTime(), EgyptTimeZone);
+            var endTimeEgypt = TimeZoneInfo.ConvertTimeFromUtc(dto.EndTime.ToUniversalTime(), EgyptTimeZone);
+            var duration = endTimeEgypt - startTimeEgypt;
 
             var session = new Session
             {
                 Title = dto.Title,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime,
+                StartTime = startTimeEgypt,
+                EndTime = endTimeEgypt,
                 Duration = duration,
                 Location = dto.Location,
                 LocationUrl = dto.LocationUrl,
                 Type = dto.Type,
                 MaxStudents = dto.MaxStudents,
+                AcademicLevel = dto.AcademicLevel,
                 IsRecurring = dto.IsRecurring,
                 RecurringPattern = dto.RecurringPattern,
                 CreatedAt = egyptNow
@@ -75,16 +80,20 @@ namespace araby.Services
                 return false;
             }
 
-            var duration = dto.EndTime - dto.StartTime;
+            // Convert incoming UTC times to Egypt timezone
+            var startTimeEgypt = TimeZoneInfo.ConvertTimeFromUtc(dto.StartTime.ToUniversalTime(), EgyptTimeZone);
+            var endTimeEgypt = TimeZoneInfo.ConvertTimeFromUtc(dto.EndTime.ToUniversalTime(), EgyptTimeZone);
+            var duration = endTimeEgypt - startTimeEgypt;
 
             session.Title = dto.Title;
-            session.StartTime = dto.StartTime;
-            session.EndTime = dto.EndTime;
+            session.StartTime = startTimeEgypt;
+            session.EndTime = endTimeEgypt;
             session.Duration = duration;
             session.Location = dto.Location;
             session.LocationUrl = dto.LocationUrl;
             session.Type = dto.Type;
             session.MaxStudents = dto.MaxStudents;
+            session.AcademicLevel = dto.AcademicLevel;
             session.IsRecurring = dto.IsRecurring;
             session.RecurringPattern = dto.RecurringPattern;
 
@@ -164,9 +173,94 @@ namespace araby.Services
             return true;
         }
 
+        public async Task<bool> AddGroupToSessionAsync(int sessionId, int groupId)
+        {
+            var session = await _sessionRepository.GetByIdAsync(sessionId);
+            if (session == null) return false;
+
+            // Check if group exists
+            var groupExists = await _context.StudentGroups.AnyAsync(g => g.Id == groupId);
+            if (!groupExists) return false;
+
+            // Check if already assigned
+            var exists = await _context.SessionGroups
+                .AnyAsync(sg => sg.SessionId == sessionId && sg.StudentGroupId == groupId);
+
+            if (exists) return true;
+
+            // Check MaxStudents
+            if (session.Type == SessionType.Group && session.MaxStudents.HasValue)
+            {
+                // Get all current distinct students
+                var individualIds = await _context.SessionStudents
+                    .Where(ss => ss.SessionId == sessionId)
+                    .Select(ss => ss.StudentId)
+                    .ToListAsync();
+
+                var currentGroupIds = await _context.SessionGroups
+                    .Where(sg => sg.SessionId == sessionId)
+                    .SelectMany(sg => sg.StudentGroup.Members)
+                    .Select(m => m.StudentId)
+                    .ToListAsync();
+                
+                var newGroupIds = await _context.StudentGroupMembers
+                    .Where(m => m.StudentGroupId == groupId)
+                    .Select(m => m.StudentId)
+                    .ToListAsync();
+
+                // Union all to get distinct count if we add this group
+                var totalStudents = individualIds
+                    .Concat(currentGroupIds)
+                    .Concat(newGroupIds)
+                    .Distinct()
+                    .Count();
+
+                if (totalStudents > session.MaxStudents.Value)
+                {
+                    return false;
+                }
+            }
+
+            var sessionGroup = new SessionGroup
+            {
+                SessionId = sessionId,
+                StudentGroupId = groupId,
+                EnrolledAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, EgyptTimeZone)
+            };
+
+            _context.SessionGroups.Add(sessionGroup);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> RemoveGroupFromSessionAsync(int sessionId, int groupId)
+        {
+            var sessionGroup = await _context.SessionGroups
+                .FirstOrDefaultAsync(sg => sg.SessionId == sessionId && sg.StudentGroupId == groupId);
+
+            if (sessionGroup == null) return false;
+
+            _context.SessionGroups.Remove(sessionGroup);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<IEnumerable<SessionDto>> GetUpcomingSessionsAsync()
         {
             var sessions = await _sessionRepository.GetUpcomingSessionsAsync();
+            var sessionDtos = new List<SessionDto>();
+
+            foreach (var session in sessions)
+            {
+                sessionDtos.Add(await MapToSessionDtoWithCountAsync(session));
+            }
+
+            return sessionDtos;
+        }
+
+        public async Task<IEnumerable<SessionDto>> GetTodayActiveSessionsAsync()
+        {
+            var sessions = await _sessionRepository.GetTodayActiveSessionsAsync();
             var sessionDtos = new List<SessionDto>();
 
             foreach (var session in sessions)
@@ -203,6 +297,7 @@ namespace araby.Services
                 LocationUrl = session.LocationUrl,
                 Type = session.Type,
                 MaxStudents = session.MaxStudents,
+                AcademicLevel = session.AcademicLevel,
                 IsRecurring = session.IsRecurring,
                 RecurringPattern = session.RecurringPattern,
                 CreatedAt = session.CreatedAt,
@@ -212,8 +307,60 @@ namespace araby.Services
 
         private async Task<SessionDto> MapToSessionDtoWithCountAsync(Session session)
         {
-            var count = await _context.SessionStudents
-                .CountAsync(ss => ss.SessionId == session.Id);
+            // ✅ Get individual students with details
+            var individualStudents = await _context.SessionStudents
+                .Where(ss => ss.SessionId == session.Id)
+                .Include(ss => ss.Student)
+                .Select(ss => new EnrolledStudentDto
+                {
+                    Id = ss.Student.Id,
+                    FullName = ss.Student.FullName,
+                    Email = ss.Student.Email,
+                    PhoneNumber = ss.Student.PhoneNumber,
+                    AcademicLevel = ss.Student.AcademicLevel,
+                    EnrollmentSource = "Individual"
+                })
+                .ToListAsync();
+
+            // ✅ Get group students with details
+            var groupStudents = await _context.SessionGroups
+                .Where(sg => sg.SessionId == session.Id)
+                .SelectMany(sg => sg.StudentGroup.Members.Select(m => new 
+                { 
+                    Member = m, 
+GroupName = sg.StudentGroup.GroupName 
+                }))
+                .Select(x => new EnrolledStudentDto
+                {
+                    Id = x.Member.Student.Id,
+                    FullName = x.Member.Student.FullName,
+                    Email = x.Member.Student.Email,
+                    PhoneNumber = x.Member.Student.PhoneNumber,
+                    AcademicLevel = x.Member.Student.AcademicLevel,
+                    EnrollmentSource = x.GroupName
+                })
+                .ToListAsync();
+
+            // ✅ Merge and remove duplicates
+            var allEnrolledStudents = individualStudents
+                .Concat(groupStudents)
+                .GroupBy(s => s.Id)
+                .Select(g => g.First())
+                .ToList();
+
+            var count = allEnrolledStudents.Count;
+
+            var assignedGroups = await _context.SessionGroups
+                .Where(sg => sg.SessionId == session.Id)
+                .Select(sg => new StudentGroupDto
+                {
+                    Id = sg.StudentGroup.Id,
+                    GroupName = sg.StudentGroup.GroupName,
+                    Description = sg.StudentGroup.Description,
+                    CreatedAt = sg.StudentGroup.CreatedAt,
+                    MembersCount = sg.StudentGroup.Members.Count
+                })
+                .ToListAsync();
 
             return new SessionDto
             {
@@ -226,10 +373,13 @@ namespace araby.Services
                 LocationUrl = session.LocationUrl,
                 Type = session.Type,
                 MaxStudents = session.MaxStudents,
+                AcademicLevel = session.AcademicLevel,
                 IsRecurring = session.IsRecurring,
                 RecurringPattern = session.RecurringPattern,
                 CreatedAt = session.CreatedAt,
-                EnrolledStudentsCount = count
+                EnrolledStudentsCount = count,
+                AssignedGroups = assignedGroups,
+                EnrolledStudents = allEnrolledStudents  // ✅ Add enrolled students list
             };
         }
     }

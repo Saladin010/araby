@@ -6,17 +6,17 @@ import api from './api'
 const attendanceService = {
     /**
      * Record attendance for multiple students in a session
-     * Note: Backend accepts single record, so we loop
      */
-    recordAttendance: async (sessionId, attendanceRecords) => {
+    recordAttendance: async (sessionId, attendanceRecords, sessionDate) => {
         const results = []
 
         for (const record of attendanceRecords) {
             const { data } = await api.post('/attendance', {
                 sessionId,
                 studentId: record.studentId,
-                status: record.status, // 1=Present, 2=Absent, 3=Late, 4=Excused
-                notes: record.notes || ''
+                status: record.status,
+                notes: record.notes || '',
+                sessionDate: sessionDate // Add sessionDate here
             })
             results.push(data)
         }
@@ -25,10 +25,14 @@ const attendanceService = {
     },
 
     /**
-     * Get attendance records for a specific session
+     * Get attendance records for a specific session and optional date
      */
-    getAttendanceBySession: async (sessionId) => {
-        const { data } = await api.get(`/attendance/session/${sessionId}`)
+    getAttendanceBySession: async (sessionId, date = null) => {
+        let url = `/attendance/session/${sessionId}`
+        if (date) {
+            url += `?date=${date}`
+        }
+        const { data } = await api.get(url)
         return data
     },
 

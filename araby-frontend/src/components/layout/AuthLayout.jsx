@@ -22,9 +22,9 @@ const AuthLayout = ({ children }) => {
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-heading font-bold gradient-text mb-2">
-                        منصة الأستاذ
+                        Mr. Ahmed Amr
                     </h1>
-                    <p className="text-text-secondary">نظام إدارة الدروس الخصوصية</p>
+                    <p className="text-text-secondary">تعليم اللغة الإنجليزية باحترافية</p>
                 </div>
 
                 {/* Card */}
@@ -34,7 +34,7 @@ const AuthLayout = ({ children }) => {
 
                 {/* Footer */}
                 <p className="text-center text-text-muted text-sm mt-6">
-                    © 2026 منصة الأستاذ. جميع الحقوق محفوظة.
+                    © 2026 Mr. Ahmed Amr. جميع الحقوق محفوظة.
                 </p>
             </motion.div>
         </div>

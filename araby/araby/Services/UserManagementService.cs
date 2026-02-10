@@ -20,6 +20,14 @@ namespace araby.Services
         {
             var egyptNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, EgyptTimeZone);
 
+            // Get next available StudentNumber
+            var studentNumbers = await _userManager.Users
+                .Where(u => u.StudentNumber.HasValue)
+                .Select(u => u.StudentNumber.Value)
+                .ToListAsync();
+            
+            var nextStudentNumber = studentNumbers.Any() ? studentNumbers.Max() + 1 : 1;
+
             var user = new ApplicationUser
             {
                 UserName = dto.UserName,
@@ -27,6 +35,7 @@ namespace araby.Services
                 PhoneNumber = dto.PhoneNumber,
                 AcademicLevel = dto.AcademicLevel,
                 Role = UserRole.Student,
+                StudentNumber = nextStudentNumber, // Auto-assign sequential number
                 IsActive = true,
                 CreatedAt = egyptNow,
                 CreatedBy = createdById,
@@ -226,6 +235,7 @@ namespace araby.Services
             return new UserDto
             {
                 Id = user.Id,
+                StudentNumber = user.StudentNumber,
                 UserName = user.UserName,
                 FullName = user.FullName,
                 Email = user.Email,

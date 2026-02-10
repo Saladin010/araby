@@ -18,14 +18,14 @@ const translations = {
 
         // Landing Page
         landing: {
-            title: 'منصة الأستاذ',
-            subtitle: 'نظام متكامل لإدارة الدروس الخصوصية والطلاب',
+            title: 'Mr. Ahmed Amr',
+            subtitle: 'تعليم اللغة الإنجليزية باحترافية - نظام متكامل لإدارة الدروس',
             getStarted: 'ابدأ الآن',
             login: 'تسجيل الدخول',
             features: 'المميزات',
             about: 'عن المنصة',
             contact: 'تواصل معنا',
-            copyright: '© 2026 منصة الأستاذ. جميع الحقوق محفوظة.',
+            copyright: '© 2026 Mr. Ahmed Amr. جميع الحقوق محفوظة.',
         },
 
         // Common
@@ -88,14 +88,14 @@ const translations = {
 
         // Landing Page
         landing: {
-            title: 'Teacher Platform',
-            subtitle: 'Complete system for managing private lessons and students',
+            title: 'Mr. Ahmed Amr',
+            subtitle: 'Professional English Language Teaching - Complete Learning Management System',
             getStarted: 'Get Started',
             login: 'Login',
             features: 'Features',
             about: 'About',
             contact: 'Contact Us',
-            copyright: '© 2026 Teacher Platform. All rights reserved.',
+            copyright: '© 2026 Mr. Ahmed Amr. All rights reserved.',
         },
 
         // Common

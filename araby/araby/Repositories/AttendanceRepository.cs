@@ -23,6 +23,17 @@ namespace araby.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Attendance>> GetBySessionIdAndDateAsync(int sessionId, DateTime date)
+        {
+            return await _dbSet
+                .Include(a => a.Student)
+                .Include(a => a.Session)
+                .Include(a => a.RecordedByUser)
+                .Where(a => a.SessionId == sessionId && a.SessionDate == date.Date)
+                .OrderBy(a => a.Student.FullName)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Attendance>> GetByStudentIdAsync(string studentId)
         {
             return await _dbSet

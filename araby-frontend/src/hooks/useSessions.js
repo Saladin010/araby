@@ -26,6 +26,18 @@ export const useUpcomingSessions = () => {
 }
 
 /**
+ * Hook to fetch today's active sessions
+ */
+export const useTodayActiveSessions = () => {
+    return useQuery({
+        queryKey: ['todayActiveSessions'],
+        queryFn: sessionService.getTodayActiveSessions,
+        staleTime: 1000 * 60 * 1, // 1 minute
+        refetchInterval: 1000 * 60 * 2, // Auto-refetch every 2 minutes
+    })
+}
+
+/**
  * Hook to fetch session details
  */
 export const useSessionDetails = (id, options = {}) => {

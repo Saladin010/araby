@@ -1,4 +1,4 @@
-import { X, Clock, MapPin, Users, Calendar, Link as LinkIcon } from 'lucide-react'
+import { X, Clock, MapPin, Users, Calendar, Link as LinkIcon, GraduationCap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format } from 'date-fns'
 import { ar } from 'date-fns/locale'
@@ -104,6 +104,17 @@ const SessionDetailsModal = ({ isOpen, onClose, session, onEdit, onDelete }) => 
                                         )}
                                     </div>
                                 </div>
+
+                                {/* Academic Level */}
+                                {session.academicLevel && (
+                                    <div className="flex items-start gap-3">
+                                        <GraduationCap className="w-5 h-5 text-primary mt-1" />
+                                        <div>
+                                            <p className="font-semibold text-text-primary">المستوى الدراسي</p>
+                                            <p className="text-text-muted">{session.academicLevel}</p>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Students */}
                                 <div className="flex items-start gap-3">

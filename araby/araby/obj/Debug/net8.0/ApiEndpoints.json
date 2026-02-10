@@ -48,6 +48,16 @@
   },
   {
     "ContainingType": "araby.Controllers.AttendanceController",
+    "Method": "MarkAbsentForCompletedSessions",
+    "RelativePath": "api/Attendance/mark-absent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.AttendanceController",
     "Method": "GetAttendanceBySession",
     "RelativePath": "api/Attendance/session/{sessionId}",
     "HttpMethod": "GET",
@@ -58,6 +68,11 @@
         "Name": "sessionId",
         "Type": "System.Int32",
         "IsRequired": true
+      },
+      {
+        "Name": "date",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -540,6 +555,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "araby.Controllers.QRCodeController",
+    "Method": "ScanQRCode",
+    "RelativePath": "api/QRCode/scan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "scanDto",
+        "Type": "araby.DTOs.QRCode.QRCodeScanDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.QRCodeController",
+    "Method": "GetStudentQRData",
+    "RelativePath": "api/QRCode/student/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "araby.Controllers.ReportsController",
     "Method": "GetAttendanceSummary",
     "RelativePath": "api/Reports/attendance/summary",
@@ -578,6 +625,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.ReportsController",
+    "Method": "GetComprehensiveStudentReport",
+    "RelativePath": "api/Reports/students/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -671,6 +734,27 @@
   },
   {
     "ContainingType": "araby.Controllers.SessionsController",
+    "Method": "AddGroupToSession",
+    "RelativePath": "api/Sessions/{id}/groups/{groupId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.SessionsController",
     "Method": "AddStudentsToSession",
     "RelativePath": "api/Sessions/{id}/students",
     "HttpMethod": "POST",
@@ -685,6 +769,27 @@
       {
         "Name": "studentIds",
         "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.SessionsController",
+    "Method": "RemoveGroupFromSession",
+    "RelativePath": "api/Sessions/{sessionId}/groups/{groupId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "groupId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -725,6 +830,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.SessionsController",
+    "Method": "GetTodayActiveSessions",
+    "RelativePath": "api/Sessions/today",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -1051,6 +1166,48 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.VerificationController",
+    "Method": "CheckAttendance",
+    "RelativePath": "api/Verification/check-attendance/{sessionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.VerificationController",
+    "Method": "RunBackgroundJob",
+    "RelativePath": "api/Verification/run-job",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "araby.Controllers.VerificationController",
+    "Method": "SimulateScan",
+    "RelativePath": "api/Verification/simulate-scan",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentNumber",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

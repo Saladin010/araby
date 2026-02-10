@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { UserPlus, Grid, List, Filter, ArrowLeft } from 'lucide-react'
+import { UserPlus, Grid, List, Filter, ArrowLeft, Download } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../components/common/SearchBar'
 import Pagination from '../components/common/Pagination'
+import { downloadMultipleQRCodes } from '../utils/qrBulkDownload'
 import {
     StudentTable,
     StudentCard,
@@ -12,6 +13,7 @@ import {
     DeleteConfirmation,
     ShowPasswordModal,
 } from '../components/students'
+import StudentQRModal from '../components/students/StudentQRModal'
 import {
     useAllUsers,
     useStudents,
@@ -49,8 +51,14 @@ const Students = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showPasswordModal, setShowPasswordModal] = useState(false)
     const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [showQRModal, setShowQRModal] = useState(false)
     const [selectedStudent, setSelectedStudent] = useState(null)
     const [studentPassword, setStudentPassword] = useState('')
+
+    // Multi-select state for bulk QR download
+    const [selectedStudents, setSelectedStudents] = useState([])
+    const [isDownloading, setIsDownloading] = useState(false)
+    const [downloadProgress, setDownloadProgress] = useState({ current: 0, total: 0 })
 
 
     // Get current user
@@ -76,7 +84,8 @@ const Students = () => {
         filteredUsers = filteredUsers.filter(user =>
             user.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             user.userName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            user.phoneNumber?.includes(searchQuery)
+            user.phoneNumber?.includes(searchQuery) ||
+            (user.studentNumber && user.studentNumber.toString().includes(searchQuery))
         )
     }
 
@@ -134,6 +143,64 @@ const Students = () => {
     const handleShowPassword = (student) => {
         setSelectedStudent(student)
         setShowPasswordModal(true)
+    }
+
+    const handleShowQR = (student) => {
+        setSelectedStudent(student)
+        setShowQRModal(true)
+    }
+
+    // Multi-select handlers
+    const handleSelectStudent = (studentId, checked) => {
+        setSelectedStudents(prev =>
+            checked
+                ? [...prev, studentId]
+                : prev.filter(id => id !== studentId)
+        )
+    }
+
+    const handleSelectAll = (checked) => {
+        if (checked) {
+            // Select all students that have student numbers
+            const allStudentIds = students
+                .filter(s => s.studentNumber)
+                .map(s => s.id)
+            setSelectedStudents(allStudentIds)
+        } else {
+            setSelectedStudents([])
+        }
+    }
+
+    // Bulk QR download handler
+    const handleBulkDownloadQR = async () => {
+        if (selectedStudents.length === 0) {
+            alert('يرجى تحديد طلاب على الأقل')
+            return
+        }
+
+        setIsDownloading(true)
+        setDownloadProgress({ current: 0, total: selectedStudents.length })
+
+        try {
+            const selectedStudentsData = students.filter(s => selectedStudents.includes(s.id))
+
+            await downloadMultipleQRCodes(
+                selectedStudentsData,
+                (current, total) => {
+                    setDownloadProgress({ current, total })
+                }
+            )
+
+            // Clear selection after successful download
+            setSelectedStudents([])
+            alert(`تم تحميل ${selectedStudentsData.length} رمز QR بنجاح!`)
+        } catch (error) {
+            console.error('Error downloading QR codes:', error)
+            alert('حدث خطأ أثناء تحميل رموز QR. يرجى المحاولة مرة أخرى.')
+        } finally {
+            setIsDownloading(false)
+            setDownloadProgress({ current: 0, total: 0 })
+        }
     }
 
     const handleSubmitStudent = async (data) => {
@@ -206,11 +273,26 @@ const Students = () => {
                             </div>
                             <p className="text-text-muted text-sm sm:text-base">إدارة وتتبع بيانات الطلاب والمساعدين</p>
                         </div>
-                        <button onClick={handleAddStudent} className="btn btn-primary w-full sm:w-auto">
-                            <UserPlus className="w-5 h-5" />
-                            <span className="hidden sm:inline">إضافة مستخدم جديد</span>
-                            <span className="sm:hidden">إضافة مستخدم</span>
-                        </button>
+                        <div className="flex gap-2">
+                            {selectedStudents.length > 0 && (
+                                <button
+                                    onClick={handleBulkDownloadQR}
+                                    className="btn btn-success"
+                                    disabled={isDownloading}
+                                >
+                                    <Download className="w-5 h-5" />
+                                    {isDownloading
+                                        ? `جاري التحميل... (${downloadProgress.current}/${downloadProgress.total})`
+                                        : `تحميل QR (${selectedStudents.length})`
+                                    }
+                                </button>
+                            )}
+                            <button onClick={handleAddStudent} className="btn btn-primary w-full sm:w-auto">
+                                <UserPlus className="w-5 h-5" />
+                                <span className="hidden sm:inline">إضافة مستخدم جديد</span>
+                                <span className="sm:hidden">إضافة مستخدم</span>
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
 
@@ -226,7 +308,7 @@ const Students = () => {
                         <SearchBar
                             value={searchQuery}
                             onChange={setSearchQuery}
-                            placeholder="ابحث عن طالب بالاسم، اسم المستخدم، أو رقم الهاتف..."
+                            placeholder="ابحث عن طالب بالاسم، الرقم التعريفي، أو رقم الهاتف..."
                         />
 
                         {/* Filters */}
@@ -310,7 +392,11 @@ const Students = () => {
                         onDelete={handleDeleteStudent}
                         onToggleStatus={handleToggleStatus}
                         onShowPassword={handleShowPassword}
+                        onShowQR={handleShowQR}
                         loading={isLoading}
+                        selectedStudents={selectedStudents}
+                        onSelectStudent={handleSelectStudent}
+                        onSelectAll={handleSelectAll}
                     />
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -370,6 +456,13 @@ const Students = () => {
                 <StudentDetailsModal
                     isOpen={showDetailsModal}
                     onClose={() => setShowDetailsModal(false)}
+                    student={selectedStudent}
+                />
+
+                {/* Student QR Modal */}
+                <StudentQRModal
+                    isOpen={showQRModal}
+                    onClose={() => setShowQRModal(false)}
                     student={selectedStudent}
                 />
             </div>

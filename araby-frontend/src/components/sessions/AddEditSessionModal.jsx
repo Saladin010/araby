@@ -1,8 +1,9 @@
-import { X, Calendar, Clock, MapPin, Link as LinkIcon, Users as UsersIcon } from 'lucide-react'
+import { X, Calendar, Clock, MapPin, Link as LinkIcon, Users as UsersIcon, GraduationCap } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
+import studentGroupService from '../../services/studentGroupService'
 
 /**
  * AddEditSessionModal Component
@@ -11,6 +12,8 @@ import { format } from 'date-fns'
 const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = [], loading }) => {
     const isEdit = !!session
     const [selectedStudents, setSelectedStudents] = useState([])
+    const [selectedGroups, setSelectedGroups] = useState([])
+    const [availableGroups, setAvailableGroups] = useState([])
     const [duration, setDuration] = useState('')
     const [isRecurring, setIsRecurring] = useState(false)
     const [selectedDays, setSelectedDays] = useState([])
@@ -28,6 +31,7 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
                 locationUrl: '',
                 type: '2', // Group by default
                 maxStudents: 20,
+                academicLevel: '',
             }
         }
 
@@ -43,6 +47,7 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
             locationUrl: session.locationUrl || '',
             type: session.type?.toString() || '2',
             maxStudents: session.maxStudents || 20,
+            academicLevel: session.academicLevel || '',
         }
     }
 
@@ -78,6 +83,7 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
                     locationUrl: session.locationUrl || '',
                     type: session.type?.toString() || '2',
                     maxStudents: session.maxStudents || 20,
+                    academicLevel: session.academicLevel || '',
                 })
 
                 if (session.students) {
@@ -106,6 +112,7 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
                     locationUrl: '',
                     type: '2',
                     maxStudents: 20,
+                    academicLevel: '',
                 })
                 setSelectedStudents([])
                 setIsRecurring(false)
@@ -136,18 +143,37 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
         }
     }, [watchStartTime, watchEndTime])
 
-    // Load selected students if editing
+    // Load selected students and groups if editing
     useEffect(() => {
-        if (session?.students) {
-            setSelectedStudents(session.students.map(s => s.id))
+        if (session) {
+            if (session.students) {
+                setSelectedStudents(session.students.map(s => s.id))
+            }
+            if (session.assignedGroups) {
+                setSelectedGroups(session.assignedGroups.map(g => g.id))
+            }
         }
     }, [session])
+
+    // Fetch available groups
+    useEffect(() => {
+        const fetchGroups = async () => {
+            try {
+                const data = await studentGroupService.getStudentGroups()
+                setAvailableGroups(data || [])
+            } catch (error) {
+                console.error('Failed to fetch groups:', error)
+            }
+        }
+        fetchGroups()
+    }, [])
 
     const onFormSubmit = (data) => {
         console.log('=== Modal onFormSubmit called ===')
         console.log('Form data:', data)
         console.log('Is edit mode:', isEdit)
         console.log('Selected students:', selectedStudents)
+        console.log('Selected groups:', selectedGroups)
 
         // Combine date and time into ISO format
         const startDateTime = new Date(`${data.startDate}T${data.startTime}`)
@@ -173,13 +199,21 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
             locationUrl: data.locationUrl || '',
             type: parseInt(data.type), // 1 = Individual, 2 = Group
             maxStudents: data.type === '2' ? parseInt(data.maxStudents) : null,
+            academicLevel: data.academicLevel || null,
             isRecurring: isRecurring,
             recurringPattern: recurringPattern,
         }
 
-        // Add studentIds only for create, not for update
+        // Add studentIds and groupIds
+        sessionData.groupIds = selectedGroups
+
+        // Add studentIds only for create, not for update (update logic for students is different/complex)
         if (!isEdit) {
             sessionData.studentIds = selectedStudents
+        } else {
+            // For update, we might want to pass studentIds too if we implemented sync in service, 
+            // but current sessionService.updateSession only syncs groups.
+            // We'll leave students as is for now to avoid breaking existing flow.
         }
 
         console.log('Final session data to submit:', sessionData)
@@ -192,8 +226,19 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
     const handleClose = () => {
         reset()
         setSelectedStudents([])
+        setSelectedGroups([])
         setDuration('')
         onClose()
+    }
+
+    const handleGroupToggle = (groupId) => {
+        setSelectedGroups(prev => {
+            if (prev.includes(groupId)) {
+                return prev.filter(id => id !== groupId)
+            } else {
+                return [...prev, groupId]
+            }
+        })
     }
 
     const handleStudentToggle = (studentId) => {
@@ -422,6 +467,26 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
 
                                 }
 
+                                {/* Academic Level */}
+                                <div>
+                                    <label className="label">
+                                        <GraduationCap className="w-4 h-4" />
+                                        <span className="mr-2">المستوى الدراسي (اختياري)</span>
+                                    </label>
+                                    <select
+                                        {...register('academicLevel')}
+                                        className="input"
+                                    >
+                                        <option value="">جميع المستويات</option>
+                                        <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                                        <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                                        <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                                    </select>
+                                    <p className="text-text-muted text-sm mt-1">
+                                        عند اختيار مستوى، سيتم التحقق من تطابقه مع مستوى الطالب عند مسح QR
+                                    </p>
+                                </div>
+
                                 {/* Recurrence Section */}
                                 <div className="border-t border-border pt-4">
                                     <div className="flex items-center gap-3 mb-4">
@@ -509,28 +574,35 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
                                     )}
                                 </div>
 
-                                {/* Students Selection */}
+
+
+                                {/* Groups Selection */}
                                 <div>
                                     <label className="label">
-                                        الطلاب ({selectedStudents.length} محدد)
+                                        المجموعات ({selectedGroups.length} محددة)
                                     </label>
                                     <div className="border border-border rounded-lg p-4 max-h-48 overflow-y-auto">
-                                        {students.length === 0 ? (
-                                            <p className="text-text-muted text-sm">لا يوجد طلاب</p>
+                                        {availableGroups.length === 0 ? (
+                                            <p className="text-text-muted text-sm">لا توجد مجموعات</p>
                                         ) : (
                                             <div className="space-y-2">
-                                                {students.map((student) => (
+                                                {availableGroups.map((group) => (
                                                     <label
-                                                        key={student.id}
+                                                        key={group.id}
                                                         className="flex items-center gap-2 cursor-pointer hover:bg-background p-2 rounded"
                                                     >
                                                         <input
                                                             type="checkbox"
-                                                            checked={selectedStudents.includes(student.id)}
-                                                            onChange={() => handleStudentToggle(student.id)}
+                                                            checked={selectedGroups.includes(group.id)}
+                                                            onChange={() => handleGroupToggle(group.id)}
                                                             className="checkbox"
                                                         />
-                                                        <span>{student.fullName}</span>
+                                                        <div className="flex-1">
+                                                            <div className="font-medium">{group.groupName}</div>
+                                                            <div className="text-xs text-text-muted">
+                                                                {group.membersCount || 0} طالب
+                                                            </div>
+                                                        </div>
                                                     </label>
                                                 ))}
                                             </div>
@@ -558,10 +630,10 @@ const AddEditSessionModal = ({ isOpen, onClose, onSubmit, session, students = []
                                 </div>
                             </form>
                         </motion.div>
-                    </div>
+                    </div >
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence >
     )
 }
 

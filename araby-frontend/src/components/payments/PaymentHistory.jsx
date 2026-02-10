@@ -39,11 +39,17 @@ const PaymentHistory = () => {
     const feeTypes = feeTypesData || []
 
     // Filter payments by search term
-    const filteredPayments = payments.filter(payment =>
-        payment.studentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        payment.feeTypeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        payment.id?.toString().includes(searchTerm)
-    )
+    const filteredPayments = payments.filter(payment => {
+        const term = searchTerm.toLowerCase()
+        const student = students.find(s => s.id === payment.studentId)
+
+        return (
+            payment.studentName?.toLowerCase().includes(term) ||
+            payment.feeTypeName?.toLowerCase().includes(term) ||
+            payment.id?.toString().includes(term) ||
+            (student?.studentNumber && student.studentNumber.toString().includes(term))
+        )
+    })
 
     const handleViewDetails = (payment) => {
         setSelectedPayment(payment)
@@ -180,7 +186,7 @@ const PaymentHistory = () => {
                     <SearchBar
                         value={searchTerm}
                         onChange={setSearchTerm}
-                        placeholder="ابحث برقم الإيصال، اسم الطالب، أو نوع الرسوم..."
+                        placeholder="ابحث برقم الإيصال، اسم الطالب، رقم الطالب، أو نوع الرسوم..."
                     />
                 </div>
             </div>

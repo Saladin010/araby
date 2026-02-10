@@ -17,23 +17,23 @@ const Features = () => {
     const features = [
         {
             icon: <BookOpen size={28} />,
-            title: 'منهج شامل ومتكامل',
+            title: 'منهج شامل للغة الإنجليزية',
             description:
-                'برنامج تعليمي متكامل يغطي جميع الجوانب التعليمية',
+                'برنامج تعليمي متكامل يغطي القواعد، المحادثة، القراءة، والكتابة بطريقة احترافية',
             color: 'from-primary to-primary-dark',
         },
         {
             icon: <GraduationCap size={28} />,
             title: 'خبرة تعليمية طويلة',
             description:
-                'أكثر من 15 عاماً من الخبرة في التدريس لمختلف المراحل الدراسية',
+                'أكثر من 15 عاماً من الخبرة في تدريس اللغة الإنجليزية لمختلف المراحل الدراسية',
             color: 'from-secondary to-amber-600',
         },
         {
             icon: <TrendingUp size={28} />,
             title: 'متابعة دقيقة للأداء',
             description:
-                'نظام متطور لتتبع تقدم الطلاب وتقديم تقارير تفصيلية عن الأداء والتحصيل الدراسي',
+                'نظام متطور لتتبع تقدم الطلاب في اللغة الإنجليزية وتقديم تقارير تفصيلية عن الأداء',
             color: 'from-accent to-emerald-600',
         },
         {
@@ -47,7 +47,7 @@ const Features = () => {
             icon: <Target size={28} />,
             title: 'نتائج مضمونة',
             description:
-                'نسبة نجاح تتجاوز 95% مع ضمان تحسين ملحوظ في مستوى الطالب خلال فترة قصيرة',
+                'نسبة نجاح تتجاوز 95% مع ضمان تحسين ملحوظ في مستوى اللغة الإنجليزية خلال فترة قصيرة',
             color: 'from-info to-blue-600',
         },
         {
@@ -70,7 +70,7 @@ const Features = () => {
                     className="text-center mb-16"
                 >
                     <h2 className="text-4xl lg:text-5xl font-heading font-bold gradient-text mb-4">
-                        ؟ لماذا تختار منصةالأستاذ
+                        لماذا تختار Mr. Ahmed Amr؟
                     </h2>
                     <p className="text-xl text-text-secondary max-w-2xl mx-auto">
                         نقدم لك تجربة تعليمية فريدة تجمع بين الجودة والاحترافية

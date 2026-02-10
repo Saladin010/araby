@@ -17,6 +17,8 @@ import Profile from './pages/Profile'
 import StudentSessions from './pages/student/StudentSessions'
 import StudentPayments from './pages/student/StudentPayments'
 import StudentGrades from './pages/student/StudentGrades'
+import MyQRCode from './pages/MyQRCode'
+import QRScanner from './pages/QRScanner'
 import NotFoundPage from './pages/NotFoundPage'
 import ComponentShowcase from './pages/ComponentShowcase'
 
@@ -157,6 +159,24 @@ function App() {
                     element={
                         <ProtectedRoute allowedRoles={[3, 'Student']}>
                             <StudentGrades />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* QR Code Routes */}
+                <Route
+                    path="/my-qr-code"
+                    element={
+                        <ProtectedRoute allowedRoles={[3, 'Student']}>
+                            <MyQRCode />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/qr-scanner"
+                    element={
+                        <ProtectedRoute allowedRoles={[1, 2]}>
+                            <QRScanner />
                         </ProtectedRoute>
                     }
                 />

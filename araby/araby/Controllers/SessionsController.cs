@@ -123,10 +123,45 @@ namespace araby.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id}/groups/{groupId}")]
+        [Authorize(Roles = "Teacher,Assistant")]
+        public async Task<IActionResult> AddGroupToSession(int id, int groupId)
+        {
+            var result = await _sessionService.AddGroupToSessionAsync(id, groupId);
+
+            if (!result)
+            {
+                return BadRequest(new { message = "Failed to add group. Session/Group not found or max capacity reached" });
+            }
+
+            return Ok(new { message = "Group added successfully" });
+        }
+
+        [HttpDelete("{sessionId}/groups/{groupId}")]
+        [Authorize(Roles = "Teacher,Assistant")]
+        public async Task<IActionResult> RemoveGroupFromSession(int sessionId, int groupId)
+        {
+            var result = await _sessionService.RemoveGroupFromSessionAsync(sessionId, groupId);
+
+            if (!result)
+            {
+                return NotFound(new { message = "Session or group enrollment not found" });
+            }
+
+            return NoContent();
+        }
+
         [HttpGet("upcoming")]
         public async Task<IActionResult> GetUpcomingSessions()
         {
             var sessions = await _sessionService.GetUpcomingSessionsAsync();
+            return Ok(sessions);
+        }
+
+        [HttpGet("today")]
+        public async Task<IActionResult> GetTodayActiveSessions()
+        {
+            var sessions = await _sessionService.GetTodayActiveSessionsAsync();
             return Ok(sessions);
         }
 

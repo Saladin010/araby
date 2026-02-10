@@ -12,6 +12,7 @@ namespace araby.DTOs
         public string LocationUrl { get; set; }
         public SessionType Type { get; set; }
         public int? MaxStudents { get; set; }
+        public string? AcademicLevel { get; set; }
         public bool IsRecurring { get; set; }
         public string RecurringPattern { get; set; }
     }
@@ -28,11 +29,26 @@ namespace araby.DTOs
         public string LocationUrl { get; set; }
         public SessionType Type { get; set; }
         public int? MaxStudents { get; set; }
+        public string? AcademicLevel { get; set; }
         public bool IsRecurring { get; set; }
         public string RecurringPattern { get; set; }
         public DateTime CreatedAt { get; set; }
         public int EnrolledStudentsCount { get; set; }
+        public List<StudentGroupDto> AssignedGroups { get; set; }
+        public List<EnrolledStudentDto> EnrolledStudents { get; set; }  // ✅ NEW
     }
+
+    // ✅ NEW DTO for enrolled students
+    public class EnrolledStudentDto
+    {
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string AcademicLevel { get; set; }
+        public string EnrollmentSource { get; set; }  // "Individual" or group name
+    }
+
 
     // DTOs/Session/UpdateSessionDto.cs
     public class UpdateSessionDto
@@ -44,6 +60,7 @@ namespace araby.DTOs
         public string LocationUrl { get; set; }
         public SessionType Type { get; set; }
         public int? MaxStudents { get; set; }
+        public string? AcademicLevel { get; set; }
         public bool IsRecurring { get; set; }
         public string RecurringPattern { get; set; }
     }

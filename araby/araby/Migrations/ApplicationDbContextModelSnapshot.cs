@@ -17,7 +17,7 @@ namespace araby.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -224,6 +224,9 @@ namespace araby.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("StudentNumber")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -243,6 +246,10 @@ namespace araby.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("StudentNumber")
+                        .IsUnique()
+                        .HasFilter("[StudentNumber] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -268,6 +275,9 @@ namespace araby.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("SessionDate")
+                        .HasColumnType("date");
+
                     b.Property<int>("SessionId")
                         .HasColumnType("int");
 
@@ -282,9 +292,11 @@ namespace araby.Migrations
 
                     b.HasIndex("RecordedBy");
 
-                    b.HasIndex("SessionId");
-
                     b.HasIndex("StudentId");
+
+                    b.HasIndex("SessionId", "StudentId", "SessionDate")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Attendance_SessionStudent_Date");
 
                     b.ToTable("Attendances");
                 });
@@ -398,6 +410,10 @@ namespace araby.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AcademicLevel")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -417,8 +433,8 @@ namespace araby.Migrations
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("LocationUrl")
                         .HasColumnType("nvarchar(max)");
@@ -445,6 +461,26 @@ namespace araby.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Sessions");
+                });
+
+            modelBuilder.Entity("araby.Models.SessionGroup", b =>
+                {
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentGroupId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EnrolledAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("SessionId", "StudentGroupId");
+
+                    b.HasIndex("StudentGroupId");
+
+                    b.ToTable("SessionGroups");
                 });
 
             modelBuilder.Entity("araby.Models.SessionStudent", b =>
@@ -706,6 +742,25 @@ namespace araby.Migrations
                         .HasForeignKey("ApplicationUserId");
                 });
 
+            modelBuilder.Entity("araby.Models.SessionGroup", b =>
+                {
+                    b.HasOne("araby.Models.Session", "Session")
+                        .WithMany("SessionGroups")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("araby.Models.StudentGroup", "StudentGroup")
+                        .WithMany("AssignedSessions")
+                        .HasForeignKey("StudentGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Session");
+
+                    b.Navigation("StudentGroup");
+                });
+
             modelBuilder.Entity("araby.Models.SessionStudent", b =>
                 {
                     b.HasOne("araby.Models.Session", "Session")
@@ -793,12 +848,16 @@ namespace araby.Migrations
                 {
                     b.Navigation("Attendances");
 
+                    b.Navigation("SessionGroups");
+
                     b.Navigation("SessionStudents");
                 });
 
             modelBuilder.Entity("araby.Models.StudentGroup", b =>
                 {
                     b.Navigation("ApplicableFees");
+
+                    b.Navigation("AssignedSessions");
 
                     b.Navigation("Members");
                 });

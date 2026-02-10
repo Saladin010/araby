@@ -6,6 +6,7 @@ namespace araby.Repositories.Interfaces
     {
         Task<IEnumerable<Session>> GetUpcomingSessionsAsync();
         Task<IEnumerable<Session>> GetSessionsByStudentIdAsync(string studentId);
+        Task<IEnumerable<Session>> GetTodayActiveSessionsAsync();
         Task<Session> GetSessionWithStudentsAsync(int sessionId);
     }
 }

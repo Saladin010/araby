@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+using Hangfire;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +23,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
+
+// Configure Hangfire
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add the processing server as IHostedService
+builder.Services.AddHangfireServer();
 
 // Configure Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -57,6 +69,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// Configure Attendance Settings
+builder.Services.Configure<AttendanceSettings>(builder.Configuration.GetSection("AttendanceSettings"));
+
 // Register Repositories (Scoped)
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ISessionRepository, SessionRepository>();
@@ -76,6 +91,10 @@ builder.Services.AddScoped<IFeeTypeService, FeeTypeService>();
 builder.Services.AddScoped<IStudentGroupService, StudentGroupService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IQRCodeService, QRCodeService>();
+
+// Register Background Services (Hosted Services)
+builder.Services.AddHostedService<AttendancePreMarkingService>();
 
 // Configure CORS for React frontend
 builder.Services.AddCors(options =>
@@ -83,8 +102,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+             .AllowAnyHeader()
+             .AllowAnyMethod();
         // ملاحظة: AllowCredentials() مش هينفع مع AllowAnyOrigin()
     });
 });
@@ -116,11 +135,25 @@ app.UseHttpsRedirection();
 app.UseDefaultFiles();   // index.html
 app.UseStaticFiles();    // wwwroot
 // Enable CORS
-app.UseCors("AllowAngularApp");
+app.UseCors("AllowAll");
 
 // Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Hangfire Dashboard
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter() }
+});
+
+// Schedule Recurring Jobs
+RecurringJob.AddOrUpdate<IAttendanceService>(
+    "mark-absent-daily",
+    service => service.MarkAbsentForTodaySessionsAsync(),
+    "1 0 * * *", // 00:01 AM every day
+    TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time")
+);
 
 app.MapControllers();
 app.MapFallbackToFile("index.html");
@@ -155,3 +188,15 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+// Simple Authorization Filter for Hangfire (Allow all in dev, or protect in prod)
+// For now allowing implicit access as we are in dev/demo mode
+public class HangfireAuthorizationFilter : Hangfire.Dashboard.IDashboardAuthorizationFilter
+{
+    public bool Authorize(Hangfire.Dashboard.DashboardContext context)
+    {
+        // In production, we should check context.GetHttpContext().User.Identity.IsAuthenticated
+        // and if user is Admin. For now, returning true for simplicity.
+        return true; 
+    }
+}

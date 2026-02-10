@@ -36,8 +36,8 @@ const Footer = () => {
                     <div>
                         <h3 className="text-xl font-heading font-bold mb-4">معلومات عنا</h3>
                         <p className="text-white/80 mb-4 leading-relaxed">
-                            نظام متكامل لإدارة الدروس الخصوصية يساعد المعلمين على تنظيم حصصهم
-                            ومتابعة طلابهم بكفاءة عالية.
+                            معلم لغة إنجليزية محترف متخصص في تدريس اللغة الإنجليزية لجميع المراحل
+                            الدراسية. نظام متكامل لإدارة الحصص ومتابعة تقدم الطلاب بكفاءة عالية.
                         </p>
                         <ul className="space-y-2">
                             {aboutLinks.map((link, index) => (
@@ -103,7 +103,7 @@ const Footer = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-white/10 pt-6 text-center">
                     <p className="text-white/70">
-                        © 2026 الأستاذ . جميع الحقوق محفوظة.
+                        © 2026 Mr. Ahmed Amr. جميع الحقوق محفوظة.
                     </p>
                 </div>
             </div>

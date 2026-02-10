@@ -3,12 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\controllers\\sessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\controllers\\sessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\services\\qrcodeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\services\\qrcodeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\controllers\\verificationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\controllers\\verificationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\services\\reportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\araby.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
@@ -17,26 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\araby.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\araby.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\models\\enums.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\test_accounts.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\test_accounts.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|c:\\users\\zall\\desktop\\araby\\araby\\araby\\controllers\\sessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9C26B584-0D22-4E31-86C0-D62B1173E138}|araby\\araby.csproj|solutionrelative:araby\\controllers\\sessionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Migrations\\20260129205427_saaa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -110,19 +118,121 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 9,
               "Title": "araby",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\araby.csproj",
               "RelativeDocumentMoniker": "araby\\araby.csproj",
               "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\araby.csproj",
               "RelativeToolTip": "araby\\araby.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-01-31T00:31:39.559Z",
+              "WhenOpened": "2026-01-31T00:31:39.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Enums.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\Enums.cs",
+              "RelativeDocumentMoniker": "araby\\Models\\Enums.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\Enums.cs",
+              "RelativeToolTip": "araby\\Models\\Enums.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-24T15:11:55.993Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 1,
+              "Title": "SessionsController.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\SessionsController.cs",
+              "RelativeDocumentMoniker": "araby\\Controllers\\SessionsController.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\SessionsController.cs",
+              "RelativeToolTip": "araby\\Controllers\\SessionsController.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAASwD4AAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T22:07:30.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "VerificationController.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\VerificationController.cs",
+              "RelativeDocumentMoniker": "araby\\Controllers\\VerificationController.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\VerificationController.cs",
+              "RelativeToolTip": "araby\\Controllers\\VerificationController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T01:47:36.591Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "QRCodeService.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Services\\QRCodeService.cs",
+              "RelativeDocumentMoniker": "araby\\Services\\QRCodeService.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Services\\QRCodeService.cs",
+              "RelativeToolTip": "araby\\Services\\QRCodeService.cs",
+              "ViewState": "AgIAAJIAAAAAAAAAAAAawDgAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-02T18:46:46.277Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\appsettings.json",
+              "RelativeDocumentMoniker": "araby\\appsettings.json",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\appsettings.json",
+              "RelativeToolTip": "araby\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-30T22:47:51.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DbSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\DbSeeder.cs",
+              "RelativeDocumentMoniker": "araby\\Data\\DbSeeder.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\DbSeeder.cs",
+              "RelativeToolTip": "araby\\Data\\DbSeeder.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAQwBwAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-24T20:02:07.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "araby\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "araby\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAANAAAAAAAAAAAAAAANoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-24T17:35:30.627Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ReportService.cs",
+              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Services\\ReportService.cs",
+              "RelativeDocumentMoniker": "araby\\Services\\ReportService.cs",
+              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Services\\ReportService.cs",
+              "RelativeToolTip": "araby\\Services\\ReportService.cs",
+              "ViewState": "AgIAAOIAAAAAAAAAAAAtwPAAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T02:33:23.964Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
               "Title": "20260131001654_v1.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Migrations\\20260131001654_v1.cs",
               "RelativeDocumentMoniker": "araby\\Migrations\\20260131001654_v1.cs",
@@ -134,57 +244,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "TEST_ACCOUNTS.md",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\TEST_ACCOUNTS.md",
-              "RelativeDocumentMoniker": "araby\\TEST_ACCOUNTS.md",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\TEST_ACCOUNTS.md",
-              "RelativeToolTip": "araby\\TEST_ACCOUNTS.md",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAkAAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2026-01-31T00:02:18.017Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\appsettings.json",
-              "RelativeDocumentMoniker": "araby\\appsettings.json",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\appsettings.json",
-              "RelativeToolTip": "araby\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAADcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-30T22:47:51.245Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "DbSeeder.cs",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\DbSeeder.cs",
-              "RelativeDocumentMoniker": "araby\\Data\\DbSeeder.cs",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\DbSeeder.cs",
-              "RelativeToolTip": "araby\\Data\\DbSeeder.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAiwBwAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-24T20:02:07.474Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Program.cs",
               "RelativeDocumentMoniker": "araby\\Program.cs",
               "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Program.cs",
               "RelativeToolTip": "araby\\Program.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAAAFoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAKIAAAAAAAAAAAAAAIMAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-24T17:40:33.428Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "araby.csproj",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\araby.csproj",
               "RelativeDocumentMoniker": "araby\\araby.csproj",
@@ -196,44 +269,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ApplicationDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\ApplicationDbContext.cs",
-              "RelativeDocumentMoniker": "araby\\Data\\ApplicationDbContext.cs",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Data\\ApplicationDbContext.cs",
-              "RelativeToolTip": "araby\\Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAALEAAAAAAAAAAAAAALsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-24T17:35:30.627Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "SessionsController.cs",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\SessionsController.cs",
-              "RelativeDocumentMoniker": "araby\\Controllers\\SessionsController.cs",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Controllers\\SessionsController.cs",
-              "RelativeToolTip": "araby\\Controllers\\SessionsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-30T22:07:30.06Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Enums.cs",
-              "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\Enums.cs",
-              "RelativeDocumentMoniker": "araby\\Models\\Enums.cs",
-              "ToolTip": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\Enums.cs",
-              "RelativeToolTip": "araby\\Models\\Enums.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAYwCQAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-24T15:11:55.993Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "Attendance.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\Attendance.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\Attendance.cs",
@@ -246,7 +282,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "Session.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\Session.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\Session.cs",
@@ -259,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "StudentPayment.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\StudentPayment.cs",
               "RelativeDocumentMoniker": "araby\\Models\\StudentPayment.cs",
@@ -272,7 +308,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "20260129205427_saaa.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Migrations\\20260129205427_saaa.cs",
               "RelativeDocumentMoniker": "araby\\Migrations\\20260129205427_saaa.cs",
@@ -284,7 +320,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "StudentGroup.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\StudentGroup.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\StudentGroup.cs",
@@ -297,7 +333,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "StudentGroupService.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Services\\StudentGroupService.cs",
               "RelativeDocumentMoniker": "araby\\Services\\StudentGroupService.cs",
@@ -310,7 +346,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "Grade.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\Grade.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\Grade.cs",
@@ -323,7 +359,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "Payment.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\Payment.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\Payment.cs",
@@ -336,7 +372,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "SpecificRepositories.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Repositories\\SpecificRepositories.cs",
               "RelativeDocumentMoniker": "araby\\Repositories\\SpecificRepositories.cs",
@@ -348,7 +384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "UserManagement.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\UserManagement.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\UserManagement.cs",
@@ -361,7 +397,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "Auth.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\DTOs\\Auth.cs",
               "RelativeDocumentMoniker": "araby\\DTOs\\Auth.cs",
@@ -374,7 +410,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 22,
               "Title": "StudentGroup.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\StudentGroup.cs",
               "RelativeDocumentMoniker": "araby\\Models\\StudentGroup.cs",
@@ -387,7 +423,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 23,
               "Title": "StudentGroupMember.cs",
               "DocumentMoniker": "C:\\Users\\ZALL\\Desktop\\araby\\araby\\araby\\Models\\StudentGroupMember.cs",
               "RelativeDocumentMoniker": "araby\\Models\\StudentGroupMember.cs",

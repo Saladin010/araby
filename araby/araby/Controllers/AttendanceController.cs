@@ -54,10 +54,18 @@ namespace araby.Controllers
         }
 
         [HttpGet("session/{sessionId}")]
-        public async Task<IActionResult> GetAttendanceBySession(int sessionId)
+        public async Task<IActionResult> GetAttendanceBySession(int sessionId, [FromQuery] DateTime? date)
         {
-            var attendances = await _attendanceService.GetAttendanceBySessionIdAsync(sessionId);
-            return Ok(attendances);
+            if (date.HasValue)
+            {
+                var attendances = await _attendanceService.GetAttendanceBySessionIdAndDateAsync(sessionId, date.Value);
+                return Ok(attendances);
+            }
+            else
+            {
+                var attendances = await _attendanceService.GetAttendanceBySessionIdAsync(sessionId);
+                return Ok(attendances);
+            }
         }
 
         [HttpGet("student/{studentId}")]
@@ -99,6 +107,14 @@ namespace araby.Controllers
         {
             var statistics = await _attendanceService.GetOverallAttendanceStatisticsAsync();
             return Ok(statistics);
+        }
+
+        [HttpPost("mark-absent")]
+        [Authorize(Roles = "Teacher,Assistant")]
+        public async Task<IActionResult> MarkAbsentForCompletedSessions()
+        {
+            await _attendanceService.MarkAbsentForTodaySessionsAsync();
+            return Ok(new { message = "تم تسجيل الغياب لجميع حصص اليوم (المتكررة والعادية)" });
         }
     }
 }

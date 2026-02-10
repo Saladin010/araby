@@ -78,7 +78,7 @@ const Navbar = ({ user, onLogout }) => {
                         to="/"
                         className="flex items-center gap-2 text-xl font-heading font-bold gradient-text"
                     >
-                        <span>منصة الأستاذ </span>
+                        <span>Mr. Ahmed Amr</span>
                     </Link>
 
                     {/* Desktop Navigation - Center */}
